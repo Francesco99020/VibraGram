@@ -1,0 +1,71 @@
+# ========================================
+# Global
+# ========================================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+
+# IntelliJ / Eclipse / VSCode
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+bin/
+out/
+.classpath
+.project
+
+# ========================================
+# Backend (Spring Boot / Java)
+# ========================================
+/backend/target/
+/backend/build/
+/backend/.gradle/
+/backend/.mvn/
+*.class
+*.jar
+*.war
+*.ear
+
+# Spring Boot local config
+/backend/application-local.properties
+/backend/application-*.yml
+/backend/application-*.yaml
+
+# ========================================
+# Frontend (React Native / Node.js)
+# ========================================
+/frontend/node_modules/
+/frontend/npm-debug.log
+/frontend/yarn-error.log
+/frontend/package-lock.json
+/frontend/yarn.lock
+/frontend/dist/
+/frontend/build/
+/frontend/.expo/
+/frontend/.expo-shared/
+/frontend/web-build/
+
+# Metro bundler cache
+/frontend/.metro-cache/
+/frontend/metro-cache/
+
+# React Native iOS / Android builds
+/frontend/ios/Pods/
+/frontend/ios/build/
+/frontend/android/.gradle/
+/frontend/android/app/build/
+/frontend/android/local.properties
+
+# ========================================
+# Env Files
+# ========================================
+.env
+.env.local
+.env.development
+.env.production
