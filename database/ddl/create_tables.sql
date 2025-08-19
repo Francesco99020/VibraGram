@@ -12,6 +12,7 @@ create table users (
     full_name varchar(100),
     bio text,
     profile_pic varchar(255),
+    is_admin boolean,
     created_at timestamp default now(),
     updated_at timestamp default current_timestamp on update current_timestamp
 );
