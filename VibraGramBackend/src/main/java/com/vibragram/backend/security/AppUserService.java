@@ -1,7 +1,7 @@
 package com.vibragram.backend.security;
 
 import com.vibragram.backend.model.AppUser;
-import com.vibragram.backend.repository.UserRepository;
+import com.vibragram.backend.repository.AuthUserRepository;
 import com.vibragram.backend.service.Result;
 import com.vibragram.backend.service.ResultType;
 import jakarta.validation.ConstraintViolation;
@@ -18,11 +18,11 @@ import java.util.Set;
 
 @Service
 public class AppUserService implements UserDetailsService {
-    private final UserRepository repository;
+    private final AuthUserRepository repository;
     private final PasswordEncoder encoder;
     private final Validator validator;
 
-    public AppUserService(UserRepository repository,
+    public AppUserService(AuthUserRepository repository,
                           PasswordEncoder encoder, Validator validator) {
         this.repository = repository;
         this.encoder = encoder;

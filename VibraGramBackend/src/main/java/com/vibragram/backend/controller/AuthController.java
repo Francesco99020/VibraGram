@@ -4,6 +4,7 @@ import com.vibragram.backend.model.AppUser;
 import com.vibragram.backend.security.AppUserService;
 import com.vibragram.backend.security.JwtConverter;
 import jakarta.validation.ValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,11 @@ import java.util.Map;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RequestMapping("/api/auth")
 public class AuthController {
+    @Autowired
     private final AuthenticationManager authenticationManager;
+    @Autowired
     private final JwtConverter converter;
+    @Autowired
     private final AppUserService appUserService;
 
     public AuthController(AuthenticationManager authenticationManager, JwtConverter converter, AppUserService appUserService) {

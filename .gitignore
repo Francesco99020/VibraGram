@@ -21,46 +21,49 @@ out/
 .project
 
 # ========================================
-# Backend (Spring Boot / Java)
+# VibraGramBackend (Spring Boot / Java)
 # ========================================
-/backend/target/
-/backend/build/
-/backend/.gradle/
-/backend/.mvn/
+/VibraGramBackend/target/
+/VibraGramBackend/build/
+/VibraGramBackend/.gradle/
+/VibraGramBackend/.mvn/
 *.class
 *.jar
 *.war
 *.ear
 
 # Spring Boot local config
-/backend/application-local.properties
-/backend/application-*.yml
-/backend/application-*.yaml
+/VibraGramBackend/application-local.properties
+/VibraGramBackend/application-*.yml
+/VibraGramBackend/application-*.yaml
+
+# Ignore uploaded media
+/uploads/
 
 # ========================================
-# Frontend (React Native / Node.js)
+# VibraGramFrontend (React Native / Node.js)
 # ========================================
-/frontend/node_modules/
-/frontend/npm-debug.log
-/frontend/yarn-error.log
-/frontend/package-lock.json
-/frontend/yarn.lock
-/frontend/dist/
-/frontend/build/
-/frontend/.expo/
-/frontend/.expo-shared/
-/frontend/web-build/
+/VibraGramFrontend/node_modules/
+/VibraGramFrontend/npm-debug.log
+/VibraGramFrontend/yarn-error.log
+/VibraGramFrontend/package-lock.json
+/VibraGramFrontend/yarn.lock
+/VibraGramFrontend/dist/
+/VibraGramFrontend/build/
+/VibraGramFrontend/.expo/
+/VibraGramFrontend/.expo-shared/
+/VibraGramFrontend/web-build/
 
 # Metro bundler cache
-/frontend/.metro-cache/
-/frontend/metro-cache/
+/VibraGramFrontend/.metro-cache/
+/VibraGramFrontend/metro-cache/
 
 # React Native iOS / Android builds
-/frontend/ios/Pods/
-/frontend/ios/build/
-/frontend/android/.gradle/
-/frontend/android/app/build/
-/frontend/android/local.properties
+/VibraGramFrontend/ios/Pods/
+/VibraGramFrontend/ios/build/
+/VibraGramFrontend/android/.gradle/
+/VibraGramFrontend/android/app/build/
+/VibraGramFrontend/android/local.properties
 
 # ========================================
 # Env Files

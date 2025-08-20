@@ -1,0 +1,72 @@
+package com.vibragram.backend.service;
+
+import com.vibragram.backend.repository.UserRepository;
+import jakarta.validation.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Set;
+import java.util.UUID;
+
+@Service
+public class UserService {
+
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final Set<String> ALLOWED_EXTENSIONS =
+            Set.of("jpg", "jpeg", "png", "gif");
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public Result<String> uploadProfilePhoto(long id, MultipartFile file) throws IOException {
+        Result<String> result = new Result<>();
+
+        // Validate file type by MIME
+        if (file.isEmpty() || file.getContentType() == null || !file.getContentType().startsWith("image/")) {
+            result.addMessage("Invalid file type. Only images are allowed.", ResultType.INVALID);
+            return result;
+        }
+
+        // Validate file size
+        if (file.getSize() > MAX_FILE_SIZE) {
+            result.addMessage("File is too large. Max size is 5MB.", ResultType.INVALID);
+            return result;
+        }
+
+        // Validate file extension
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf('.') + 1).toLowerCase();
+        }
+        if (!ALLOWED_EXTENSIONS.contains(extension)) {
+            result.addMessage("Invalid file extension. Allowed: jpg, jpeg, png, gif.", ResultType.INVALID);
+            return result;
+        }
+
+        // Generate unique file name
+        String fileName = UUID.randomUUID() + "-" + originalFilename;
+        Path uploadPath = Paths.get("uploads/profile-photos");
+        Files.createDirectories(uploadPath);
+
+        // Save file to disk
+        Path filePath = uploadPath.resolve(fileName);
+        file.transferTo(filePath);
+
+        // Save file metadata (URL) in DB
+        boolean updated = userRepository.updateProfilePhoto(id, "/uploads/profile-photos/" + fileName);
+
+        if (updated) {
+            result.setPayload("/uploads/profile-photos/" + fileName);
+        } else {
+            result.addMessage("Profile photo metadata could not be uploaded.", ResultType.INVALID);
+        }
+
+        return result;
+    }
+}
