@@ -1,7 +1,7 @@
 package com.vibragram.backend.repository;
 
 import com.vibragram.backend.model.AppUser;
-import com.vibragram.backend.repository.mappers.UserMapper;
+import com.vibragram.backend.repository.mappers.AppUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,7 +27,7 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
                 "from users " +
                 "where username = ?;";
 
-        return jdbcTemplate.query(sql, new UserMapper(), username).stream()
+        return jdbcTemplate.query(sql, new AppUserMapper(), username).stream()
                 .findFirst().orElse(null);
     }
 
@@ -37,7 +37,7 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
                 "from users " +
                 "where email = ?;";
 
-        return jdbcTemplate.query(sql, new UserMapper(), email).stream()
+        return jdbcTemplate.query(sql, new AppUserMapper(), email).stream()
                 .findFirst().orElse(null);
     }
 
@@ -47,7 +47,7 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
                 + "from users "
                 + "where user_id = ?;";
 
-        return jdbcTemplate.query(sql, new UserMapper(), userId).stream()
+        return jdbcTemplate.query(sql, new AppUserMapper(), userId).stream()
                 .findFirst().orElse(null);
     }
 

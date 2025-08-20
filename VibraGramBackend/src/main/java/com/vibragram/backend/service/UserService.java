@@ -54,12 +54,27 @@ public class UserService {
         Path uploadPath = Paths.get("uploads/profile-photos");
         Files.createDirectories(uploadPath);
 
+        //Check if user already has a profile photo
+        String existingProfilePic = userRepository.findProfilePhotoUrl(id);
+        if(existingProfilePic != null && !existingProfilePic.isBlank()){
+            //remove current profile pic from storage
+            Path oldFilePath = Paths.get(existingProfilePic);
+
+            if(oldFilePath.startsWith(uploadPath)){
+                try{
+                    Files.deleteIfExists(oldFilePath);
+                } catch (IOException e){
+                    System.err.println("Failed to delete old profile photo: " + e.getMessage());
+                }
+            }
+        }
+
         // Save file to disk
         Path filePath = uploadPath.resolve(fileName);
         file.transferTo(filePath);
 
         // Save file metadata (URL) in DB
-        boolean updated = userRepository.updateProfilePhoto(id, "/uploads/profile-photos/" + fileName);
+        boolean updated = userRepository.updateProfilePhoto(id, "uploads/profile-photos/" + fileName);
 
         if (updated) {
             result.setPayload("/uploads/profile-photos/" + fileName);

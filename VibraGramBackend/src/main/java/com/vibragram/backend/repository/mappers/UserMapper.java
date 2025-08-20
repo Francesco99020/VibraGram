@@ -1,31 +1,35 @@
 package com.vibragram.backend.repository.mappers;
 
-import com.vibragram.backend.model.AppUser;
+import com.vibragram.backend.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-public class UserMapper implements RowMapper<AppUser> {
-
+public class UserMapper implements RowMapper<User> {
     @Override
-    public AppUser mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        int userId = resultSet.getInt("user_id");
-        String username = resultSet.getString("username");
-        String email = resultSet.getString("email");
-        String hashedPassword = resultSet.getString("password_hash");
-        LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-        boolean isAdmin = resultSet.getBoolean("is_admin");
+    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        int userId = rs.getInt("user_id");
+        String username = rs.getString("username");
+        String email = rs.getString("email");
+        String fullName = rs.getString("full_name");
+        String bio = rs.getString("bio");
+        String profilePic = rs.getString("profile_pic");
+        boolean isAdmin = rs.getBoolean("is_admin");
+        LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+        LocalDateTime updatedAt = rs.getTimestamp("updated_at").toLocalDateTime();
 
-        return new AppUser(
+        return new User(
                 userId,
                 username,
                 email,
-                hashedPassword,
-                createdAt,
+                fullName,
+                bio,
+                profilePic,
                 isAdmin,
-                true
+                createdAt,
+                updatedAt
         );
     }
 }

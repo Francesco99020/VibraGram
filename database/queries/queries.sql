@@ -3,6 +3,8 @@ use vibragram_test;
 -- Get all users
 SELECT * FROM users;
 
+select * from users where user_id = 5;
+
 select user_id, username, email, password_hash, created_at, is_admin
 from users
 where username = 'bob';
