@@ -2,11 +2,11 @@
 use vibragram_test;
 
 -- USERS
-INSERT INTO users (username, email, password_hash, full_name, bio, profile_pic, is_admin) VALUES
-('alice', 'alice@example.com', 'hashed_pw1', 'Alice Johnson', 'Love traveling and photography.', '/images/alice.jpg', true),
-('bob', 'bob@example.com', 'hashed_pw2', 'Bob Smith', 'Coffee addict. Developer.', '/images/bob.jpg', false),
-('carol', 'carol@example.com', 'hashed_pw3', 'Carol White', 'Music is life.', '/images/carol.jpg', false),
-('dave', 'dave@example.com', 'hashed_pw4', 'Dave Brown', 'Foodie & Gamer.', '/images/dave.jpg', false);
+INSERT INTO users (username, email, password_hash, full_name, gender, bio, profile_pic, is_admin) VALUES
+('alice', 'alice@example.com', 'hashed_pw1', 'Alice Johnson', 'female', 'Love traveling and photography.', '/images/alice.jpg', true),
+('bob', 'bob@example.com', 'hashed_pw2', 'Bob Smith', 'male', 'Coffee addict. Developer.', '/images/bob.jpg', false),
+('carol', 'carol@example.com', 'hashed_pw3', 'Carol White', 'male', 'Music is life.', '/images/carol.jpg', false),
+('dave', 'dave@example.com', 'hashed_pw4', 'Dave Brown', 'male', 'Foodie & Gamer.', '/images/dave.jpg', false);
 
 -- FOLLOWERS (Alice follows Bob, Carol follows Alice, Bob follows Dave)
 INSERT INTO followers (follower_id, following_id) VALUES

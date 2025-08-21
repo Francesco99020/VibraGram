@@ -1,5 +1,8 @@
 package com.vibragram.backend.controller;
 
+import com.vibragram.backend.model.BioUpdateRequest;
+import com.vibragram.backend.model.FullNameUpdateRequest;
+import com.vibragram.backend.model.GenderUpdateRequest;
 import com.vibragram.backend.service.Result;
 import com.vibragram.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +45,41 @@ public class UserController {
         }
     }
 
+    @PostMapping("/{id}/bio")
+    public ResponseEntity<?> uploadBio(
+            @PathVariable Long id,
+            @RequestBody BioUpdateRequest request) {
+        Result<String> result = service.uploadBio(id, request);
+        if(result.isSuccess()){
+            return ResponseEntity.ok("Bio updated successfully.");
+        } else {
+            return ResponseEntity.badRequest().body(result.getMessages());
+        }
+    }
 
+    @PostMapping("/{id}/full-name")
+    public ResponseEntity<?> uploadFullName(
+            @PathVariable Long id,
+            @RequestBody FullNameUpdateRequest request
+            ){
+        Result<String> result = service.uploadFullName(id, request);
+        if(result.isSuccess()){
+            return ResponseEntity.ok("Full name updated successfully.");
+        } else {
+            return ResponseEntity.badRequest().body(result.getMessages());
+        }
+    }
+
+    @PostMapping("/{id}/gender")
+    public ResponseEntity<?> uploadGender(
+            @PathVariable Long id,
+            @RequestBody GenderUpdateRequest request
+            ){
+        Result<GenderUpdateRequest> result = service.uploadGender(id, request);
+        if(result.isSuccess()){
+            return ResponseEntity.ok("Gender updated successfully.");
+        } else {
+            return ResponseEntity.badRequest().body(result.getMessages());
+        }
+    }
 }

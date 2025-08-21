@@ -10,6 +10,7 @@ create table users (
     email varchar(255) unique,
     password_hash varchar(255),
     full_name varchar(100),
+	gender enum('male','female'),
     bio text,
     profile_pic varchar(255),
     is_admin boolean,
@@ -36,6 +37,7 @@ create table posts (
 	post_id bigint primary key auto_increment,
     user_id bigint,
     caption text,
+    location varchar(100),
     created_at timestamp default now(),
     constraint fk_posts_user_id foreign key (user_id) references users(user_id)
 );

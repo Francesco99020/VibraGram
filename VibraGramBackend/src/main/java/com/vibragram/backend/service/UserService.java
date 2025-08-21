@@ -1,6 +1,10 @@
 package com.vibragram.backend.service;
 
+import com.vibragram.backend.model.BioUpdateRequest;
+import com.vibragram.backend.model.FullNameUpdateRequest;
+import com.vibragram.backend.model.GenderUpdateRequest;
 import com.vibragram.backend.repository.UserRepository;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +23,14 @@ public class UserService {
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final Set<String> ALLOWED_EXTENSIONS =
             Set.of("jpg", "jpeg", "png", "gif");
+    private final Validator validator;
 
     @Autowired
     private UserRepository userRepository;
+
+    public UserService(Validator validator) {
+        this.validator = validator;
+    }
 
     public Result<String> uploadProfilePhoto(long id, MultipartFile file) throws IOException {
         Result<String> result = new Result<>();
@@ -82,6 +91,57 @@ public class UserService {
             result.addMessage("Profile photo metadata could not be uploaded.", ResultType.INVALID);
         }
 
+        return result;
+    }
+
+    public Result<String> uploadBio(long id, BioUpdateRequest bio){
+        Result<String> result = new Result<>();
+        Set<ConstraintViolation<BioUpdateRequest>> violations = validator.validate(bio);
+        if(!violations.isEmpty()){
+            for (ConstraintViolation<BioUpdateRequest> violation : violations){
+                result.addMessage(violation.getMessage(), ResultType.INVALID);
+            }
+            return result;
+        }
+        if(userRepository.updateBio(id, bio.getBio())){
+            result.setPayload(bio.getBio());
+        } else {
+            result.addMessage("Bio could not be updated.", ResultType.INVALID);
+        }
+        return result;
+    }
+
+    public Result<String> uploadFullName(long id, FullNameUpdateRequest request){
+        Result<String> result = new Result<>();
+        Set<ConstraintViolation<FullNameUpdateRequest>> violations = validator.validate(request);
+        if(!violations.isEmpty()){
+            for (ConstraintViolation<FullNameUpdateRequest> violation : violations){
+                result.addMessage(violation.getMessage(), ResultType.INVALID);
+            }
+            return result;
+        }
+        if(userRepository.updateFullName(id, request.getName())){
+            result.setPayload(request.getName());
+        } else {
+            result.addMessage("Full name could not be updated", ResultType.INVALID);
+        }
+        return result;
+    }
+
+    public Result<GenderUpdateRequest> uploadGender(long id, GenderUpdateRequest request){
+        Result<GenderUpdateRequest> result = new Result<>();
+        Set<ConstraintViolation<GenderUpdateRequest>> violations = validator.validate(request);
+        if(!violations.isEmpty()){
+            for (ConstraintViolation<GenderUpdateRequest> violation : violations){
+                result.addMessage(violation.getMessage(), ResultType.INVALID);
+            }
+            return result;
+        }
+        if(userRepository.updateGender(id, request.getGender())){
+            result.setPayload(request);
+        } else {
+            result.addMessage("Gender could not be updated", ResultType.INVALID);
+        }
         return result;
     }
 }
