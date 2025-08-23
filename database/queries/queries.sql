@@ -1,5 +1,18 @@
 use vibragram_test;
 
+
+
+
+
+select * from upload_session
+where user_id = 5 
+and status = 'active' 
+and expires_at > NOW();
+
+
+
+
+
 -- Get all users
 SELECT * FROM users;
 

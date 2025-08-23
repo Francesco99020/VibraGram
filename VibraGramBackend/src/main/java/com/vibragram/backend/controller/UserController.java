@@ -37,7 +37,7 @@ public class UserController {
             if (result.isSuccess()) {
                 return ResponseEntity.ok("Profile photo uploaded successfully.");
             } else {
-                return ResponseEntity.badRequest().body(result.getMessages());
+                return ErrorResponse.build(result);
             }
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -53,7 +53,7 @@ public class UserController {
         if(result.isSuccess()){
             return ResponseEntity.ok("Bio updated successfully.");
         } else {
-            return ResponseEntity.badRequest().body(result.getMessages());
+            return ErrorResponse.build(result);
         }
     }
 
@@ -66,7 +66,7 @@ public class UserController {
         if(result.isSuccess()){
             return ResponseEntity.ok("Full name updated successfully.");
         } else {
-            return ResponseEntity.badRequest().body(result.getMessages());
+            return ErrorResponse.build(result);
         }
     }
 
@@ -79,7 +79,7 @@ public class UserController {
         if(result.isSuccess()){
             return ResponseEntity.ok("Gender updated successfully.");
         } else {
-            return ResponseEntity.badRequest().body(result.getMessages());
+            return ErrorResponse.build(result);
         }
     }
 }

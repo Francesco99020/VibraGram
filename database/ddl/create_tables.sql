@@ -62,10 +62,23 @@ create table media (
     media_url varchar(255),
     media_order int,
     created_at timestamp default now(),
+    upload_session_id varchar(36) null,
+    constraint uq_media_session_order unique (upload_session_id, media_order),
     constraint fk_media_post_id foreign key (post_id) references posts(post_id)
 );
 
 CREATE INDEX idx_media_post_id ON media(post_id);
+
+CREATE TABLE upload_session (
+    upload_session_id char(36) PRIMARY KEY, -- unique upload_session_id
+    user_id bigint NOT NULL,                         -- user who started the upload
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),   -- when session was created
+    expires_at TIMESTAMP NOT NULL,                 -- when session should expire
+    status VARCHAR(20) NOT NULL DEFAULT 'active',  -- ACTIVE, COMPLETED, EXPIRED, CANCELLED
+    post_id char(36) NULL,                             -- optional: if you want to link to a post later
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
 
 create table tags (
 	tag_id bigint primary key auto_increment,
