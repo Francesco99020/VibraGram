@@ -1,6 +1,7 @@
 package com.vibragram.backend.repository;
 
 import com.vibragram.backend.model.UploadSession;
+import com.vibragram.backend.model.UploadSessionStatus;
 import com.vibragram.backend.repository.mappers.UploadSessionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -69,5 +70,14 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
 
         return jdbcTemplate.query(sql, new UploadSessionMapper(), userId).stream()
                 .findFirst().orElse(null);
+    }
+
+    @Override
+    public boolean setUploadSessionStatus(UUID uploadSessionId, UploadSessionStatus status) {
+        final String sql = "update upload_session " +
+                "set status = ? " +
+                "where upload_session_id = ?";
+
+        return jdbcTemplate.update(sql, status.getMessage(), uploadSessionId.toString()) > 0;
     }
 }

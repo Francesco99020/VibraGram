@@ -3,6 +3,7 @@ package com.vibragram.backend.controller;
 import com.vibragram.backend.model.BioUpdateRequest;
 import com.vibragram.backend.model.FullNameUpdateRequest;
 import com.vibragram.backend.model.GenderUpdateRequest;
+import com.vibragram.backend.security.AppUserService;
 import com.vibragram.backend.service.Result;
 import com.vibragram.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,23 @@ public class UserController {
     @Autowired
     private final UserService service;
 
-    public UserController(UserService service) {
+    @Autowired
+    private final AppUserService appUserService;
+
+    public UserController(UserService service, AppUserService appUserService) {
         this.service = service;
+        this.appUserService = appUserService;
     }
 
-    @PostMapping("/{id}/profile-photo")
+    @PostMapping("/profile-photo")
     public ResponseEntity<?> uploadProfilePhoto(
-            @PathVariable Long id,
             @RequestParam("file") MultipartFile file,
             Principal principal) {
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
 
         try {
-            Result<String> result = service.uploadProfilePhoto(id, file);
+            Result<String> result = service.uploadProfilePhoto(userId, file);
 
             if (result.isSuccess()) {
                 return ResponseEntity.ok("Profile photo uploaded successfully.");
@@ -45,11 +51,14 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{id}/bio")
+    @PostMapping("/bio")
     public ResponseEntity<?> uploadBio(
-            @PathVariable Long id,
-            @RequestBody BioUpdateRequest request) {
-        Result<String> result = service.uploadBio(id, request);
+            @RequestBody BioUpdateRequest request,
+            Principal principal) {
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
+
+        Result<String> result = service.uploadBio(userId, request);
         if(result.isSuccess()){
             return ResponseEntity.ok("Bio updated successfully.");
         } else {
@@ -57,12 +66,15 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{id}/full-name")
+    @PostMapping("/full-name")
     public ResponseEntity<?> uploadFullName(
-            @PathVariable Long id,
-            @RequestBody FullNameUpdateRequest request
+            @RequestBody FullNameUpdateRequest request,
+            Principal principal
             ){
-        Result<String> result = service.uploadFullName(id, request);
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
+
+        Result<String> result = service.uploadFullName(userId, request);
         if(result.isSuccess()){
             return ResponseEntity.ok("Full name updated successfully.");
         } else {
@@ -70,12 +82,15 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{id}/gender")
+    @PostMapping("/gender")
     public ResponseEntity<?> uploadGender(
-            @PathVariable Long id,
-            @RequestBody GenderUpdateRequest request
+            @RequestBody GenderUpdateRequest request,
+            Principal principal
             ){
-        Result<GenderUpdateRequest> result = service.uploadGender(id, request);
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
+
+        Result<GenderUpdateRequest> result = service.uploadGender(userId, request);
         if(result.isSuccess()){
             return ResponseEntity.ok("Gender updated successfully.");
         } else {

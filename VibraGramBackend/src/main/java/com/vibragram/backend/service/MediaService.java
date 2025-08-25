@@ -56,6 +56,23 @@ public class MediaService {
         return result;
     }
 
+    public Result<UploadSession> updateUploadSessionStatus(UUID uploadSessionId, UploadSessionStatus status){
+        Result<UploadSession> result = new Result<>();
+        UploadSession uploadSession = repository.getUploadSessionByUUID(uploadSessionId);
+        if(uploadSession == null){
+            result.addMessage("Upload session with id " + uploadSessionId + " does not exist", ResultType.NOT_FOUND);
+            return result;
+        }
+
+        if(repository.setUploadSessionStatus(uploadSessionId, status)){
+            uploadSession.setStatus(status);
+            result.setPayload(uploadSession);
+        } else {
+            result.addMessage("Could not update status of upload session", ResultType.INVALID);
+        }
+        return result;
+    }
+
 //    public Result<Media> uploadMediaForPost(UUID uploadSessionId, MultipartFile file) {
 //        Result<Media> result = new Result<>();
 //
