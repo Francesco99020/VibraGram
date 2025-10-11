@@ -12,7 +12,7 @@ public enum MediaType {
     }
 
 
-    public String getMediaType() {
+    public String getStringName() {
         return mediaType;
     }
 }

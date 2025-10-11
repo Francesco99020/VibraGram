@@ -1,4 +1,4 @@
-package com.vibragram.backend.model;
+package com.vibragram.backend.model.Request;
 
 import jakarta.validation.constraints.Size;
 

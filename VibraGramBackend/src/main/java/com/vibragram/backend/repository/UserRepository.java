@@ -1,7 +1,6 @@
 package com.vibragram.backend.repository;
 
 import com.vibragram.backend.model.Gender;
-import com.vibragram.backend.model.GenderUpdateRequest;
 
 public interface UserRepository {
     boolean updateProfilePhoto(long id, String profilePicUrl);

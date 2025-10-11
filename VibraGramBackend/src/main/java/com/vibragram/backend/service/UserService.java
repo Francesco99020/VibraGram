@@ -1,8 +1,8 @@
 package com.vibragram.backend.service;
 
-import com.vibragram.backend.model.BioUpdateRequest;
-import com.vibragram.backend.model.FullNameUpdateRequest;
-import com.vibragram.backend.model.GenderUpdateRequest;
+import com.vibragram.backend.model.Request.BioUpdateRequest;
+import com.vibragram.backend.model.Request.FullNameUpdateRequest;
+import com.vibragram.backend.model.Request.GenderUpdateRequest;
 import com.vibragram.backend.repository.UserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;

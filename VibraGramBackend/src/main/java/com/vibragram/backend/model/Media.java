@@ -5,10 +5,21 @@ import java.util.UUID;
 public class Media {
     private Long mediaId;
     private UUID uploadSessionId;
-    private long postId;
+    private Long postId;
     private MediaType mediaType;
     private String mediaUrl;
     private int mediaOrder;
+
+    public Media(Long mediaId, UUID uploadSessionId, Long postId, MediaType mediaType, String mediaUrl, int mediaOrder) {
+        this.mediaId = mediaId;
+        this.uploadSessionId = uploadSessionId;
+        this.postId = postId;
+        this.mediaType = mediaType;
+        this.mediaUrl = mediaUrl;
+        this.mediaOrder = mediaOrder;
+    }
+
+    public Media(){}
 
     public long getMediaId() {
         return mediaId;

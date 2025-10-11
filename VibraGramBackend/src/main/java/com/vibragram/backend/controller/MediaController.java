@@ -1,9 +1,7 @@
 package com.vibragram.backend.controller;
 
-import com.vibragram.backend.model.AppUser;
-import com.vibragram.backend.model.Media;
-import com.vibragram.backend.model.UploadSession;
-import com.vibragram.backend.model.UploadSessionStatus;
+import com.vibragram.backend.model.*;
+import com.vibragram.backend.model.Response.UploadSessionIdResponse;
 import com.vibragram.backend.security.AppUserService;
 import com.vibragram.backend.service.MediaService;
 import com.vibragram.backend.service.Result;
@@ -37,7 +35,7 @@ public class MediaController {
 
         Result<UUID> result = service.getNewUploadSessionId(userId);
         if(result.isSuccess()){
-            return ResponseEntity.ok(result.getPayload());
+            return ResponseEntity.ok(new UploadSessionIdResponse(result.getPayload()));
         } else {
             return ResponseEntity.badRequest().body(result.getMessages());
         }
@@ -46,8 +44,19 @@ public class MediaController {
     @PutMapping("/{uploadSessionId}/update_status/{status}")
     public ResponseEntity<?> updateUploadSessionStatus(
             @PathVariable UUID uploadSessionId,
-            @PathVariable String status
+            @PathVariable String status,
+            Principal principal
     ){
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
+        Result<Long> userResult = service.getUserIdOfUploadSession(uploadSessionId);
+        if(!userResult.isSuccess()){
+            return ResponseEntity.badRequest().body(userResult.getMessages());
+        }
+        if(userResult.getPayload() != userId){
+            return ResponseEntity.badRequest().body("Not authorized to use this upload session");
+        }
+
         Result<UploadSession> result = service.updateUploadSessionStatus(uploadSessionId, UploadSessionStatus.getStatusFromString(status));
 
         if(result.isSuccess()){
@@ -57,22 +66,36 @@ public class MediaController {
         }
     }
 
-//    @PostMapping("/media/{upload_session_id}/upload")
-//    public ResponseEntity<?> uploadMediaForPost(
-//            @PathVariable UUID uploadSessionId,
-//            @RequestParam("file")MultipartFile file
-//            ){
-//        try{
-//            Result<Media> result = service.uploadMediaForPost(uploadSessionId, file);
-//
-//            if(result.isSuccess()){
-//                return ResponseEntity.ok(result.getPayload());
-//            } else {
-//                return ResponseEntity.badRequest().body(result.getMessages());
-//            }
-//        }catch (Exception e){
-//            System.err.println(e.getMessage());
-//        }
-//        return ResponseEntity.badRequest().body("Could not upload file.");
-//    }
+    //TODO: Issue with response message, needs investigating returns 200 and 500
+    @PostMapping("/{uploadSessionId}/upload/{mediaOrder}")
+    public ResponseEntity<?> uploadMediaForPost(
+            @PathVariable String uploadSessionId,
+            @PathVariable int mediaOrder,
+            @RequestParam("file")MultipartFile file,
+            Principal principal
+            ){
+        //verify upload session id belongs to user
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
+        UUID uploadSessionUUID = UUID.fromString(uploadSessionId);
+        Result<Long> userResult = service.getUserIdOfUploadSession(uploadSessionUUID);
+        if(!userResult.isSuccess()){
+            return ResponseEntity.badRequest().body(userResult.getMessages());
+        }
+        if(userResult.getPayload() != userId){
+            return ResponseEntity.badRequest().body("Not authorized to use this upload session");
+        }
+        try{
+            Result<Media> result = service.uploadMediaForPost(uploadSessionUUID, file, mediaOrder);
+
+            if(result.isSuccess()){
+                return ResponseEntity.ok(result.getPayload());
+            } else {
+                return ResponseEntity.badRequest().body(result.getMessages());
+            }
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+        return ResponseEntity.badRequest().body("Could not upload file.");
+    }
 }

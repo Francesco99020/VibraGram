@@ -26,7 +26,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // disable CSRF for APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // public endpoints
+                        .requestMatchers("/api/auth/**").permitAll() // public endpoints for authentication
+                        .requestMatchers("/uploads/**").permitAll() // public endpoints for serving media
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);

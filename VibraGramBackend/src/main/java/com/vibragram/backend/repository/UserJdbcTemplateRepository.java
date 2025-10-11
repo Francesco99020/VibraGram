@@ -1,9 +1,7 @@
 package com.vibragram.backend.repository;
 
 import com.vibragram.backend.model.Gender;
-import com.vibragram.backend.model.GenderUpdateRequest;
 import com.vibragram.backend.model.User;
-import com.vibragram.backend.repository.mappers.AppUserMapper;
 import com.vibragram.backend.repository.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

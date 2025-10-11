@@ -1,8 +1,8 @@
 package com.vibragram.backend.controller;
 
-import com.vibragram.backend.model.BioUpdateRequest;
-import com.vibragram.backend.model.FullNameUpdateRequest;
-import com.vibragram.backend.model.GenderUpdateRequest;
+import com.vibragram.backend.model.Request.BioUpdateRequest;
+import com.vibragram.backend.model.Request.FullNameUpdateRequest;
+import com.vibragram.backend.model.Request.GenderUpdateRequest;
 import com.vibragram.backend.security.AppUserService;
 import com.vibragram.backend.service.Result;
 import com.vibragram.backend.service.UserService;

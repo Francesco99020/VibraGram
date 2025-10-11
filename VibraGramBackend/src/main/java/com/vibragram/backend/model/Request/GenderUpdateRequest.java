@@ -1,4 +1,6 @@
-package com.vibragram.backend.model;
+package com.vibragram.backend.model.Request;
+
+import com.vibragram.backend.model.Gender;
 
 public class GenderUpdateRequest {
     public Gender getGender() {

@@ -1,7 +1,9 @@
 package com.vibragram.backend.repository;
 
+import com.vibragram.backend.model.Media;
 import com.vibragram.backend.model.UploadSession;
 import com.vibragram.backend.model.UploadSessionStatus;
+import com.vibragram.backend.repository.mappers.MediaMapper;
 import com.vibragram.backend.repository.mappers.UploadSessionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -79,5 +82,77 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
                 "where upload_session_id = ?";
 
         return jdbcTemplate.update(sql, status.getMessage(), uploadSessionId.toString()) > 0;
+    }
+
+    @Override
+    public Long getUserIdOfUploadSession(UUID uploadSessionId) {
+        final String sql = "select * " +
+                "from upload_session " +
+                "where upload_session_id = ?";
+
+        UploadSession uploadSession = jdbcTemplate.query(sql, new UploadSessionMapper(), uploadSessionId.toString()).stream()
+                .findFirst().orElse(null);
+
+        return (uploadSession == null) ? null : uploadSession.getUserId();
+    }
+
+    @Override
+    public boolean createMedia(Media media) {
+        final String sql = "insert into media " +
+                "(media_type, media_url, media_order, upload_session_id) " +
+                "values (?, ?, ?, ?)";
+
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int rowsAffected = jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps.setString(1, media.getMediaType().getStringName());
+            ps.setString(2, media.getMediaUrl());
+            ps.setInt(3, media.getMediaOrder());
+            ps.setString(4, media.getUploadSessionId().toString());
+
+            return ps;
+        }, keyHolder);
+
+        if(rowsAffected > 0){
+            Number key = keyHolder.getKey();
+            if(key != null){
+                media.setMediaId(key.longValue());
+            } else {
+                media.setMediaId(-1);
+            }
+        }
+
+        return rowsAffected > 0;
+    }
+
+    @Override
+    public List<Media> getMediaByUploadSession(UUID uploadSessionId) {
+        final String sql = "select * " +
+                "from media " +
+                "where upload_session_id = ?";
+
+        return jdbcTemplate.query(sql, new MediaMapper(), uploadSessionId.toString());
+    }
+
+    @Override
+    public List<Media> getMediaByPostId(long postId) {
+        final String sql = "select * " +
+                "from media " +
+                "where post_id = ?";
+
+        return jdbcTemplate.query(sql, new MediaMapper(), postId);
+    }
+
+    @Override
+    public boolean updateMedia(Media media) {
+        final String sql = "update media set " +
+                "post_id = ?, " +
+                "media_type = ?, " +
+                "media_url = ?, " +
+                "media_order = ? " +
+                "where media_id = ?";
+
+        return jdbcTemplate.update(sql, media.getPostId(),
+                media.getMediaType().getStringName(), media.getMediaUrl(), media.getMediaOrder(), media.getMediaId()) > 0;
     }
 }
