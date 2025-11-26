@@ -3,7 +3,6 @@ package com.vibragram.backend.service;
 import com.vibragram.backend.model.Media;
 import com.vibragram.backend.model.MediaType;
 import com.vibragram.backend.model.UploadSession;
-import com.vibragram.backend.model.UploadSessionStatus;
 import com.vibragram.backend.repository.MediaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,6 @@ public class MediaService {
         uploadSession.setUploadSessionId(UUID.randomUUID());
         uploadSession.setCreatedAt(LocalDateTime.now());
         uploadSession.setExpiresAt(LocalDateTime.now().plusHours(1));
-        uploadSession.setStatus(UploadSessionStatus.ACTIVE);
         uploadSession.setUserId(id);
 
         if(repository.createUploadSession(uploadSession)){
@@ -57,22 +55,6 @@ public class MediaService {
         return result;
     }
 
-    public Result<UploadSession> updateUploadSessionStatus(UUID uploadSessionId, UploadSessionStatus status){
-        Result<UploadSession> result = new Result<>();
-        UploadSession uploadSession = repository.getUploadSessionByUUID(uploadSessionId);
-        if(uploadSession == null){
-            result.addMessage("Upload session with id " + uploadSessionId + " does not exist", ResultType.NOT_FOUND);
-            return result;
-        }
-
-        if(repository.setUploadSessionStatus(uploadSessionId, status)){
-            uploadSession.setStatus(status);
-            result.setPayload(uploadSession);
-        } else {
-            result.addMessage("Could not update status of upload session", ResultType.INVALID);
-        }
-        return result;
-    }
 
     public Result<Long> getUserIdOfUploadSession(UUID uploadSessionId){
         Result<Long> result = new Result<>();
@@ -169,6 +151,11 @@ public class MediaService {
     // --- Service method for collecting all media linked to a post ---
     public List<Media> getMediaLinkedToPost(long postId){
         return repository.getMediaByPostId(postId);
+    }
+
+    // --- Service method for expiring uploadSessionId's when a post is completed
+    public boolean expireUploadSessionId(UUID uploadSessionId){
+        return repository.expireUploadSessionId(uploadSessionId);
     }
 
     // --- Helpers ---

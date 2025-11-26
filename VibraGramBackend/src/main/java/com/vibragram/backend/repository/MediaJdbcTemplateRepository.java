@@ -2,7 +2,6 @@ package com.vibragram.backend.repository;
 
 import com.vibragram.backend.model.Media;
 import com.vibragram.backend.model.UploadSession;
-import com.vibragram.backend.model.UploadSessionStatus;
 import com.vibragram.backend.repository.mappers.MediaMapper;
 import com.vibragram.backend.repository.mappers.UploadSessionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,8 +28,8 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
     @Override
     public boolean createUploadSession(UploadSession uploadSession) {
         final String sql = "insert into upload_session " +
-                "(upload_session_id, user_id, created_at, expires_at, status, post_id) " +
-                "values (?, ?, ?, ?, ?, ?)";
+                "(upload_session_id, user_id, created_at, expires_at) " +
+                "values (?, ?, ?, ?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
@@ -40,13 +38,6 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
             ps.setLong(2, uploadSession.getUserId());
             ps.setTimestamp(3, Timestamp.valueOf(uploadSession.getCreatedAt()));
             ps.setTimestamp(4, Timestamp.valueOf(uploadSession.getExpiresAt()));
-            ps.setString(5, uploadSession.getStatus().getMessage());
-
-            if (uploadSession.getPostId() == 0) {
-                ps.setNull(6, Types.BIGINT);
-            } else {
-                ps.setLong(6, uploadSession.getPostId());
-            }
             return ps;
         }, keyHolder);
 
@@ -57,7 +48,6 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
     public UploadSession getUploadSessionByUUID(UUID uploadSessionId) {
         final String sql = "select * from upload_session " +
                 "where upload_session_id = ? " +
-                "and `status` = 'active' " +
                 "and expires_at > NOW();";
 
         return jdbcTemplate.query(sql, new UploadSessionMapper(), uploadSessionId.toString()).stream()
@@ -68,20 +58,10 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
     public UploadSession getUploadSessionByUserId(long userId) {
         final String sql = "select * from upload_session " +
                 "where user_id = ? " +
-                "and `status` = 'active' " +
                 "and expires_at > NOW()";
 
         return jdbcTemplate.query(sql, new UploadSessionMapper(), userId).stream()
                 .findFirst().orElse(null);
-    }
-
-    @Override
-    public boolean setUploadSessionStatus(UUID uploadSessionId, UploadSessionStatus status) {
-        final String sql = "update upload_session " +
-                "set status = ? " +
-                "where upload_session_id = ?";
-
-        return jdbcTemplate.update(sql, status.getMessage(), uploadSessionId.toString()) > 0;
     }
 
     @Override
@@ -154,5 +134,14 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
 
         return jdbcTemplate.update(sql, media.getPostId(),
                 media.getMediaType().getStringName(), media.getMediaUrl(), media.getMediaOrder(), media.getMediaId()) > 0;
+    }
+
+    @Override
+    public boolean expireUploadSessionId(UUID uploadSessionId) {
+        final String sql = "update upload_session set " +
+                "expires_at = NOW() " +
+                "where upload_session_id = ?";
+
+        return jdbcTemplate.update(sql, uploadSessionId.toString()) > 0;
     }
 }

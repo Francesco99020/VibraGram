@@ -8,16 +8,13 @@ public class UploadSession {
     private long userId;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
-    private UploadSessionStatus status;
     private long postId;
 
-    public UploadSession(UUID uploadSessionId, long userId, LocalDateTime createdAt, LocalDateTime expiresAt, UploadSessionStatus status, long postId) {
+    public UploadSession(UUID uploadSessionId, long userId, LocalDateTime createdAt, LocalDateTime expiresAt) {
         this.uploadSessionId = uploadSessionId;
         this.userId = userId;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
-        this.status = status;
-        this.postId = postId;
     }
 
     public UploadSession(){}
@@ -52,21 +49,5 @@ public class UploadSession {
 
     public void setExpiresAt(LocalDateTime expiresAt) {
         this.expiresAt = expiresAt;
-    }
-
-    public UploadSessionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(UploadSessionStatus status) {
-        this.status = status;
-    }
-
-    public long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(long postId) {
-        this.postId = postId;
     }
 }

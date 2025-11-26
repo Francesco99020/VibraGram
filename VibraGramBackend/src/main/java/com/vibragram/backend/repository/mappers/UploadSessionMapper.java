@@ -1,7 +1,6 @@
 package com.vibragram.backend.repository.mappers;
 
 import com.vibragram.backend.model.UploadSession;
-import com.vibragram.backend.model.UploadSessionStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -17,16 +16,12 @@ public class UploadSessionMapper implements RowMapper<UploadSession> {
         long userId = rs.getLong("user_id");
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
         LocalDateTime expiresAt = rs.getTimestamp("expires_at").toLocalDateTime();
-        UploadSessionStatus status = UploadSessionStatus.getStatusFromString(rs.getString("status"));
-        long postId = rs.getLong("post_id");
 
         return new UploadSession(
                 uploadSessionId,
                 userId,
                 createdAt,
-                expiresAt,
-                status,
-                postId
+                expiresAt
         );
     }
 }

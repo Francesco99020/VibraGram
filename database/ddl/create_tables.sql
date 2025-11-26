@@ -74,8 +74,6 @@ CREATE TABLE upload_session (
     user_id bigint NOT NULL,                         -- user who started the upload
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),   -- when session was created
     expires_at TIMESTAMP NOT NULL,                 -- when session should expire
-    status VARCHAR(20) NOT NULL DEFAULT 'active',  -- ACTIVE, COMPLETED, EXPIRED, CANCELLED
-    post_id char(36) NULL,                             -- optional: if you want to link to a post later
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 

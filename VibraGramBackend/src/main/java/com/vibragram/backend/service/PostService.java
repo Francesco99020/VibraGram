@@ -55,6 +55,12 @@ public class PostService {
             return result;
         }
 
+        // Expire uploadSessionId for current post to allow user to create multiple posts back to back
+        if(!mediaService.expireUploadSessionId(uploadSessionId)){
+            result.addMessage("Could not expire uploadSessionId", ResultType.INVALID);
+            return result;
+        }
+
         result.setPayload(post);
         return result;
     }
