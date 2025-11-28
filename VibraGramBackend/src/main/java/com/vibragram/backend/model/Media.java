@@ -21,11 +21,11 @@ public class Media {
 
     public Media(){}
 
-    public long getMediaId() {
+    public Long getMediaId() {
         return mediaId;
     }
 
-    public void setMediaId(long mediaId) {
+    public void setMediaId(Long mediaId) {
         this.mediaId = mediaId;
     }
 
@@ -37,11 +37,11 @@ public class Media {
         this.uploadSessionId = uploadSessionId;
     }
 
-    public long getPostId() {
+    public Long getPostId() {
         return postId;
     }
 
-    public void setPostId(long postId) {
+    public void setPostId(Long postId) {
         this.postId = postId;
     }
 

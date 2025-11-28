@@ -7,6 +7,8 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Arrays;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -18,6 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) throws Exception {
         // log this error...
+        System.err.println(Arrays.toString(ex.getStackTrace()));
 
         if (ex instanceof HttpMessageNotReadableException || ex instanceof HttpMediaTypeNotSupportedException) {
             throw ex; // return

@@ -98,7 +98,7 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
             if(key != null){
                 media.setMediaId(key.longValue());
             } else {
-                media.setMediaId(-1);
+                media.setMediaId((long) -1);
             }
         }
 
