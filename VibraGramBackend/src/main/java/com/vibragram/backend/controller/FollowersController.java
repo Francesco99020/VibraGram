@@ -25,25 +25,12 @@ public class FollowersController {
         this.appUserService = appUserService;
     }
 
-    @GetMapping("/followers")
-    public ResponseEntity<?> getFollowers(Principal principal){
-        String username = principal.getName();
-        long userId = appUserService.findByUsername(username).getUserId();
-
-        Result<List<Long>> result = service.getFollowers(userId);
-        if(result.isSuccess()){
-            return ResponseEntity.ok(result.getPayload());
-        } else {
-            return ErrorResponse.build(result);
-        }
-    }
-
-    @GetMapping("/following")
+    @GetMapping("/following")//get people you follow
     public ResponseEntity<?> getFollowing(Principal principal){
         String username = principal.getName();
         long userId = appUserService.findByUsername(username).getUserId();
 
-        Result<List<Long>> result = service.getFollowing(userId);
+        Result<List<String>> result = service.getFollowers(userId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result.getPayload());
         } else {
@@ -51,27 +38,43 @@ public class FollowersController {
         }
     }
 
-    @PostMapping("/start-following")
+    @GetMapping("/followers")//get people following you
+    public ResponseEntity<?> getFollowers(Principal principal){
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
+
+        Result<List<String>> result = service.getFollowing(userId);
+        if(result.isSuccess()){
+            return ResponseEntity.ok(result.getPayload());
+        } else {
+            return ErrorResponse.build(result);
+        }
+    }
+
+    @PutMapping("/start-following/{followerUsername}")
     public ResponseEntity<?> startFollowing(
             Principal principal,
-            @RequestBody String followerUsername
+            @PathVariable String followerUsername
     ){
         String followingUsername = principal.getName();
+        if(followerUsername.equals(followingUsername)){
+            return ResponseEntity.badRequest().body("Cannot follow yourself");
+        }
         long followingUserId = appUserService.findByUsername(followingUsername).getUserId();
         long followerUserId = appUserService.findByUsername(followerUsername).getUserId();
 
         Result<Boolean> result = service.startFollowing(followerUserId, followingUserId);
         if(result.isSuccess()){
-            return ResponseEntity.ok(result.getPayload());
+            return ResponseEntity.status(201).body(result.getPayload());
         } else {
             return ErrorResponse.build(result);
         }
     }
 
-    @PostMapping("/stop-following")
+    @PutMapping("/stop-following/{followerUsername}")
     public ResponseEntity<?> stopFollowing(
             Principal principal,
-            @RequestBody String followerUsername
+            @PathVariable String followerUsername
     ){
         String followingUsername = principal.getName();
         long followingUserId = appUserService.findByUsername(followingUsername).getUserId();

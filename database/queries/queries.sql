@@ -1,8 +1,7 @@
 use vibragram_test;
 
 select *
-from users
-where user_id = 5;
+from users;
 
 select *
 from upload_session;
