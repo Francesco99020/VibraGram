@@ -13,6 +13,8 @@ public interface MediaRepository {
 
     public UploadSession getUploadSessionByUserId(long userId);
 
+    public Media getMediaByMediaURL(String url);
+
     public Long getUserIdOfUploadSession(UUID uploadSessionId);
 
     public boolean createMedia(Media media);
@@ -24,4 +26,6 @@ public interface MediaRepository {
     public boolean updateMedia(Media media);
 
     public boolean expireUploadSessionId(UUID uploadSessionId);
+
+    public boolean deleteMedia(long mediaId);
 }

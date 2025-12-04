@@ -65,6 +65,15 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
     }
 
     @Override
+    public Media getMediaByMediaURL(String url) {
+        final String sql = "select * " +
+                "from media " +
+                "where media_url = ?";
+
+        return jdbcTemplate.query(sql, new MediaMapper(), url).stream().findFirst().orElse(null);
+    }
+
+    @Override
     public Long getUserIdOfUploadSession(UUID uploadSessionId) {
         final String sql = "select * " +
                 "from upload_session " +
@@ -143,5 +152,13 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
                 "where upload_session_id = ?";
 
         return jdbcTemplate.update(sql, uploadSessionId.toString()) > 0;
+    }
+
+    @Override
+    public boolean deleteMedia(long mediaId) {
+        final String sql = "delete from media " +
+                "where media_id = ?";
+
+        return jdbcTemplate.update(sql, mediaId) > 0;
     }
 }
