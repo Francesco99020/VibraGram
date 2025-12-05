@@ -68,4 +68,16 @@ public class Media {
     public void setMediaOrder(int mediaOrder) {
         this.mediaOrder = mediaOrder;
     }
+
+    @Override
+    public String toString() {
+        return "Media{" +
+                "mediaId=" + mediaId +
+                ", uploadSessionId=" + uploadSessionId +
+                ", postId=" + postId +
+                ", mediaType=" + mediaType +
+                ", mediaUrl='" + mediaUrl + '\'' +
+                ", mediaOrder=" + mediaOrder +
+                '}';
+    }
 }

@@ -63,6 +63,7 @@ public class AppUserService implements UserDetailsService {
         email = (email == null || email.isBlank()) ? "null@null.com" : email;
 
         LocalDateTime createdAt = LocalDateTime.now();
+        boolean isPublic = false;
         boolean isAdmin = false;
         boolean enabled = true;
 
@@ -72,6 +73,7 @@ public class AppUserService implements UserDetailsService {
                 email,
                 hashedPassword,
                 createdAt,
+                isPublic,
                 isAdmin,
                 enabled);
 
@@ -112,6 +114,7 @@ public class AppUserService implements UserDetailsService {
         String hashedPassword = encoder.encode(appUser.getPassword());
 
         LocalDateTime createdAt = LocalDateTime.now();
+        boolean isPublic = false;
         boolean isAdmin = false;
         boolean enabled = true;
 
@@ -121,6 +124,7 @@ public class AppUserService implements UserDetailsService {
                 appUser.getEmail(),
                 hashedPassword,
                 createdAt,
+                isPublic,
                 isAdmin,
                 enabled);
 
@@ -188,6 +192,17 @@ public class AppUserService implements UserDetailsService {
 
     public boolean deleteById(int userId) {
         return repository.deleteById(userId);
+    }
+
+    public Result<Boolean> findPublicStatus(int userId){
+        Result<Boolean> result = new Result<>();
+        AppUser appUser = repository.findById(userId);
+        if(appUser == null){
+            result.addMessage("User Not Found", ResultType.NOT_FOUND);
+        } else {
+            result.setPayload(appUser.isPublic());
+        }
+        return result;
     }
 
     private Result<AppUser> validateUser(AppUser appUser){

@@ -59,6 +59,16 @@ public class FollowersService {
 
     public Result<Boolean> startFollowing(long follower, long following){
         Result<Boolean> result = new Result<>();
+
+        //If user profile is private must request before user can follow
+
+        //get user following isPublic status
+        Result<Boolean> publicStatusResult = appUserService.findPublicStatus((int)following);
+        if(!publicStatusResult.isSuccess()) return publicStatusResult;
+        if(!publicStatusResult.getPayload()){
+
+        }
+
         boolean isFollowing = repository.startFollowing(follower, following);
         if(isFollowing){
             result.setPayload(true);

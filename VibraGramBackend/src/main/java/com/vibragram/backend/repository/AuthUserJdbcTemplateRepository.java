@@ -23,7 +23,7 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
 
     @Override
     public AppUser findByUsername(String username) {
-        final String sql = "select user_id, username, email, password_hash, created_at, is_admin " +
+        final String sql = "select user_id, username, email, password_hash, created_at, is_public, is_admin " +
                 "from users " +
                 "where username = ?;";
 
@@ -33,7 +33,7 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
 
     @Override
     public AppUser findByEmail(String email) {
-        final String sql = "select user_id, username, email, password_hash, created_at, is_admin " +
+        final String sql = "select user_id, username, email, password_hash, created_at, is_public, is_admin " +
                 "from users " +
                 "where email = ?;";
 
@@ -43,7 +43,7 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
 
     @Override
     public AppUser findById(int userId) {
-        final String sql = "select user_id, username, email, password_hash, created_at, is_admin "
+        final String sql = "select user_id, username, email, password_hash, created_at, is_public, is_admin "
                 + "from users "
                 + "where user_id = ?;";
 
@@ -53,7 +53,7 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
 
     @Override
     public AppUser add(AppUser appUser) {
-        final String sql = "insert into users (username, email, password_hash, created_at, is_admin) values (?, ?, ?, ?, ?);";
+        final String sql = "insert into users (username, email, password_hash, created_at, is_public, is_admin) values (?, ?, ?, ?, ?, ?);";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
@@ -62,7 +62,8 @@ public class AuthUserJdbcTemplateRepository implements AuthUserRepository {
             ps.setString(2, appUser.getEmail());
             ps.setString(3, appUser.getPassword());
             ps.setDate(4, Date.valueOf(appUser.getCreatedAt().toLocalDate()));
-            ps.setBoolean(5, appUser.isAdmin());
+            ps.setBoolean(5, appUser.isPublic());
+            ps.setBoolean(6, appUser.isAdmin());
             return ps;
         }, keyHolder);
 

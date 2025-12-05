@@ -13,6 +13,7 @@ create table users (
 	gender enum('male','female'),
     bio text,
     profile_pic varchar(255),
+    is_public boolean,
     is_admin boolean,
     created_at timestamp default now(),
     updated_at timestamp default current_timestamp on update current_timestamp

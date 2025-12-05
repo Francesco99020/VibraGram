@@ -12,4 +12,6 @@ public interface UserRepository {
     boolean updateFullName(long id, String fullName);
 
     boolean updateGender(long id, Gender gender);
+
+    boolean updateIsPublic(long id, boolean isPublic);
 }

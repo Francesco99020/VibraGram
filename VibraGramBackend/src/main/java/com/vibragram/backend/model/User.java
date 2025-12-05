@@ -27,6 +27,8 @@ public class User {
 
     private String profilePic;
 
+    private boolean isPublic;
+
     private boolean isAdmin;
 
     @NotNull(message = "Created at date is required.")
@@ -38,13 +40,14 @@ public class User {
     private LocalDateTime updatedAt;
 
     public User(long userId, String username, String email, String fullName, String bio,
-                String profilePic, boolean isAdmin, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                String profilePic, boolean isAdmin, boolean isPublic, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.fullName = fullName;
         this.bio = bio;
         this.profilePic = profilePic;
+        this.isPublic = isPublic;
         this.isAdmin = isAdmin;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -58,6 +61,7 @@ public class User {
         this.bio = "";
         this.profilePic = "";
         this.isAdmin = false;
+        this.isPublic = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -110,6 +114,14 @@ public class User {
         this.profilePic = profilePic;
     }
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -138,11 +150,11 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return userId == user.userId && isAdmin == user.isAdmin && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(fullName, user.fullName) && Objects.equals(bio, user.bio) && Objects.equals(profilePic, user.profilePic) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
+        return userId == user.userId && isAdmin == user.isAdmin && isPublic == user.isPublic && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(fullName, user.fullName) && Objects.equals(bio, user.bio) && Objects.equals(profilePic, user.profilePic) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username, email, fullName, bio, profilePic, isAdmin, createdAt, updatedAt);
+        return Objects.hash(userId, username, email, fullName, bio, profilePic, isPublic, isAdmin, createdAt, updatedAt);
     }
 }

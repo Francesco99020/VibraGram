@@ -48,7 +48,8 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
     public UploadSession getUploadSessionByUUID(UUID uploadSessionId) {
         final String sql = "select * from upload_session " +
                 "where upload_session_id = ? " +
-                "and expires_at > NOW();";
+                "order by expires_at desc " +
+                "limit 1;";
 
         return jdbcTemplate.query(sql, new UploadSessionMapper(), uploadSessionId.toString()).stream()
                 .findFirst().orElse(null);
@@ -58,7 +59,8 @@ public class MediaJdbcTemplateRepository implements MediaRepository{
     public UploadSession getUploadSessionByUserId(long userId) {
         final String sql = "select * from upload_session " +
                 "where user_id = ? " +
-                "and expires_at > NOW()";
+                "order by expires_at desc " +
+                "limit 1;";
 
         return jdbcTemplate.query(sql, new UploadSessionMapper(), userId).stream()
                 .findFirst().orElse(null);

@@ -45,7 +45,7 @@ public class MediaCleanupService {
                 continue;
             }
 
-            if(media.getPostId() == null && mediaRepository.getUploadSessionByUUID(media.getUploadSessionId()).getExpiresAt().isBefore(LocalDateTime.now())){
+            if(media.getPostId() == 0 && mediaRepository.getUploadSessionByUUID(media.getUploadSessionId()).getExpiresAt().isBefore(LocalDateTime.now())){
                 //media UUID is expired and does not belong to a post, must be deleted.
                 System.out.printf("File named %s attempted to be deleted. Status: %s%n", p.getFileName(), Files.deleteIfExists(p));
                 //remove media entry from database

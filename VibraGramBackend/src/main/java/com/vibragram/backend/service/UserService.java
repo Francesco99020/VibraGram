@@ -94,7 +94,7 @@ public class UserService {
         return result;
     }
 
-    public Result<String> uploadBio(long id, BioUpdateRequest bio){
+    public Result<String> updateBio(long id, BioUpdateRequest bio){
         Result<String> result = new Result<>();
         Set<ConstraintViolation<BioUpdateRequest>> violations = validator.validate(bio);
         if(!violations.isEmpty()){
@@ -111,7 +111,7 @@ public class UserService {
         return result;
     }
 
-    public Result<String> uploadFullName(long id, FullNameUpdateRequest request){
+    public Result<String> updateFullName(long id, FullNameUpdateRequest request){
         Result<String> result = new Result<>();
         Set<ConstraintViolation<FullNameUpdateRequest>> violations = validator.validate(request);
         if(!violations.isEmpty()){
@@ -128,7 +128,7 @@ public class UserService {
         return result;
     }
 
-    public Result<GenderUpdateRequest> uploadGender(long id, GenderUpdateRequest request){
+    public Result<GenderUpdateRequest> updateGender(long id, GenderUpdateRequest request){
         Result<GenderUpdateRequest> result = new Result<>();
         Set<ConstraintViolation<GenderUpdateRequest>> violations = validator.validate(request);
         if(!violations.isEmpty()){
@@ -141,6 +141,16 @@ public class UserService {
             result.setPayload(request);
         } else {
             result.addMessage("Gender could not be updated", ResultType.INVALID);
+        }
+        return result;
+    }
+
+    public Result<Boolean> updateIsPublic(long id, boolean isPublic){
+        Result<Boolean> result = new Result<>();
+        if(userRepository.updateIsPublic(id, isPublic)){
+            result.setPayload(true);
+        } else {
+            result.addMessage("Cannot update is public status", ResultType.INVALID);
         }
         return result;
     }

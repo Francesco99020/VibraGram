@@ -25,10 +25,12 @@ public class AppUser extends User {
     @PastOrPresent(message = "Created at date cannot be in the future.")
     private LocalDateTime createdAt;
 
+    private boolean isPublic;
+
     private boolean isAdmin;
 
     public AppUser(int userId, String username, String email, String hashedPassword,
-                   LocalDateTime createdAt, boolean isAdminFromDb, boolean enabled) {
+                   LocalDateTime createdAt, boolean isPublic, boolean isAdminFromDb, boolean enabled) {
         super(username,
                 hashedPassword,
                 enabled,
@@ -40,6 +42,7 @@ public class AppUser extends User {
         this.userId = userId;
         this.email = email;
         this.createdAt = createdAt;
+        this.isPublic = isPublic;
         this.isAdmin = isAdminFromDb;
     }
 
@@ -49,32 +52,35 @@ public class AppUser extends User {
         this.userId = 0;
         this.email = ""; // Default email
         this.createdAt = LocalDateTime.now(); // Default createdAt
+        this.isPublic = false; // Default least viewable
         this.isAdmin = false; // Default to not admin
     }
 
     public AppUser(int userId, String username, String email,
                    String hashedPassword, LocalDateTime createdAt,
-                   boolean disabled, List<String> roles) {
+                   boolean disabled, boolean isPublic, List<String> roles) {
         super(username, hashedPassword, !disabled, // 'enabled' is the opposite of 'disabled'
                 true, true, true,
                 convertRolesToAuthorities(roles));
         this.userId = userId;
         this.email = email;
         this.createdAt = createdAt;
+        this.isPublic = isPublic;
         this.isAdmin = roles != null && roles.stream()
                 .map(String::toUpperCase)
                 .anyMatch(role -> role.equals("ADMIN"));
     }
 
     public AppUser(int userId, String username, String email, String hashedPassword,
-                   LocalDateTime createdAt, boolean enabled,
+                   LocalDateTime createdAt, boolean isPublic, boolean enabled,
                    Collection<? extends GrantedAuthority> authorities) {
         super(username, hashedPassword, enabled, true,
                 true, true, authorities);
         this.userId = userId;
         this.email = email;
         this.createdAt = createdAt;
-        this.isAdmin = authorities != null && authorities.stream()
+        this.isPublic = isPublic;
+        this.isAdmin = authorities.stream()
                 .anyMatch(auth -> auth.getAuthority()
                         .equals(AUTHORITY_PREFIX + "ADMIN"));
     }
@@ -114,6 +120,14 @@ public class AppUser extends User {
         this.createdAt = createdAt;
     }
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -121,23 +135,6 @@ public class AppUser extends User {
     public void setAdmin(boolean admin) {
         this.isAdmin = admin;
 
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        AppUser appUser = (AppUser) o;
-        return userId == appUser.userId &&
-                isAdmin == appUser.isAdmin &&
-                Objects.equals(email, appUser.email) &&
-                Objects.equals(createdAt, appUser.createdAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), userId, email, createdAt, isAdmin);
     }
 
     public static List<GrantedAuthority> convertRolesToAuthorities(List<String> roles) {
@@ -165,5 +162,18 @@ public class AppUser extends User {
                 .filter(a -> a.startsWith(AUTHORITY_PREFIX))
                 .map(a -> a.substring(AUTHORITY_PREFIX.length()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppUser appUser)) return false;
+        if (!super.equals(o)) return false;
+        return userId == appUser.userId && isPublic == appUser.isPublic && isAdmin == appUser.isAdmin && Objects.equals(email, appUser.email) && Objects.equals(createdAt, appUser.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), userId, email, createdAt, isPublic, isAdmin);
     }
 }

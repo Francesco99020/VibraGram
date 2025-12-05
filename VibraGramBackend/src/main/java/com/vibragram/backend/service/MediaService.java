@@ -165,7 +165,9 @@ public class MediaService {
     }
 
     private boolean isValidSession(long userId){
-        return repository.getUploadSessionByUserId(userId) != null;
+        UploadSession uploadSession = repository.getUploadSessionByUserId(userId);
+        if(uploadSession == null) return false;
+        return uploadSession.getExpiresAt().isAfter(LocalDateTime.now());
     }
 
     private String getFileExtension(String filename) {

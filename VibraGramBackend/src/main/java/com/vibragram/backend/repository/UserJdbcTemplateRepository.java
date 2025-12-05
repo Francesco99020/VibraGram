@@ -61,4 +61,13 @@ public class UserJdbcTemplateRepository implements UserRepository{
 
         return jdbcTemplate.update(sql, gender.getDbValue(), id) > 0;
     }
+
+    @Override
+    public boolean updateIsPublic(long id, boolean isPublic) {
+        final String sql = "update users set " +
+                "is_public = ? " +
+                "where user_id = ?;";
+
+        return jdbcTemplate.update(sql, isPublic, id) > 0;
+    }
 }

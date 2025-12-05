@@ -16,6 +16,7 @@ public class AppUserMapper implements RowMapper<AppUser> {
         String email = resultSet.getString("email");
         String hashedPassword = resultSet.getString("password_hash");
         LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+        boolean isPublic = resultSet.getBoolean("is_public");
         boolean isAdmin = resultSet.getBoolean("is_admin");
 
         return new AppUser(
@@ -24,6 +25,7 @@ public class AppUserMapper implements RowMapper<AppUser> {
                 email,
                 hashedPassword,
                 createdAt,
+                isPublic,
                 isAdmin,
                 true
         );

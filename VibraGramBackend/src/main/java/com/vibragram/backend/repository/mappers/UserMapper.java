@@ -16,6 +16,7 @@ public class UserMapper implements RowMapper<User> {
         String fullName = rs.getString("full_name");
         String bio = rs.getString("bio");
         String profilePic = rs.getString("profile_pic");
+        boolean isPublic = rs.getBoolean("is_public");
         boolean isAdmin = rs.getBoolean("is_admin");
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
         LocalDateTime updatedAt = rs.getTimestamp("updated_at").toLocalDateTime();
@@ -27,6 +28,7 @@ public class UserMapper implements RowMapper<User> {
                 fullName,
                 bio,
                 profilePic,
+                isPublic,
                 isAdmin,
                 createdAt,
                 updatedAt

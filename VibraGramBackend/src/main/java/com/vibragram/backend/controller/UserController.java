@@ -51,48 +51,64 @@ public class UserController {
         }
     }
 
-    @PostMapping("/bio")
-    public ResponseEntity<?> uploadBio(
+    @PutMapping("/bio")
+    public ResponseEntity<?> updateBio(
             @RequestBody BioUpdateRequest request,
             Principal principal) {
         String username = principal.getName();
         long userId = appUserService.findByUsername(username).getUserId();
 
-        Result<String> result = service.uploadBio(userId, request);
+        Result<String> result = service.updateBio(userId, request);
         if(result.isSuccess()){
-            return ResponseEntity.ok("Bio updated successfully.");
+            return ResponseEntity.status(201).build();
         } else {
             return ErrorResponse.build(result);
         }
     }
 
-    @PostMapping("/full-name")
-    public ResponseEntity<?> uploadFullName(
+    @PutMapping("/full-name")
+    public ResponseEntity<?> updateFullName(
             @RequestBody FullNameUpdateRequest request,
             Principal principal
             ){
         String username = principal.getName();
         long userId = appUserService.findByUsername(username).getUserId();
 
-        Result<String> result = service.uploadFullName(userId, request);
+        Result<String> result = service.updateFullName(userId, request);
         if(result.isSuccess()){
-            return ResponseEntity.ok("Full name updated successfully.");
+            return ResponseEntity.status(201).build();
         } else {
             return ErrorResponse.build(result);
         }
     }
 
-    @PostMapping("/gender")
-    public ResponseEntity<?> uploadGender(
+    @PutMapping("/gender")
+    public ResponseEntity<?> updateGender(
             @RequestBody GenderUpdateRequest request,
             Principal principal
             ){
         String username = principal.getName();
         long userId = appUserService.findByUsername(username).getUserId();
 
-        Result<GenderUpdateRequest> result = service.uploadGender(userId, request);
+        Result<GenderUpdateRequest> result = service.updateGender(userId, request);
         if(result.isSuccess()){
-            return ResponseEntity.ok("Gender updated successfully.");
+            return ResponseEntity.status(201).build();
+        } else {
+            return ErrorResponse.build(result);
+        }
+    }
+
+    @PutMapping("/is-public/{isPublic}")
+    public ResponseEntity<?> updateIsPublic(
+            Principal principal,
+            @PathVariable boolean isPublic
+    ){
+        String username = principal.getName();
+        long userId = appUserService.findByUsername(username).getUserId();
+
+        Result<Boolean> result = service.updateIsPublic(userId, isPublic);
+        if(result.isSuccess()){
+            return ResponseEntity.status(201).build();
         } else {
             return ErrorResponse.build(result);
         }
